@@ -149,9 +149,6 @@ select last_name, instr(last_name, 'o')
 from HR.employees
 where last_name like '%o%';
 
---문제) oc가 있는 성중 oc가 몇번째에 있는 위치를 출력하시오.
---직원번호 성, 성의 위치, 직무
-
 --/*
 --instr(last_name,'oc') : 원하는 문자가 없으면 0을 반환
 --instr('abcde' , 'a') : 1
@@ -220,11 +217,17 @@ from HR.employees
 where hire_date > '03/01/01';
 
 --문제) 올해는 오늘까지 몇주가 지났는지 확인하시오.
-
-
+select sysdate, to_date('20200101', 'yyyymmdd'), (sysdate - to_date('20200101', 'yyyymmdd')) ,trunc((sysdate - to_date('20200101', 'yyyymmdd')) / 7, 2)
+from dual; -- 값 이 좀 이상함.
 
 --문제) 직원마다 몇년 근무했지를 출력하시오.
 --직원번호, 성, 연락처,부서, 근무년수
---
---
---문제) 근속년수 8년 이상인 사원들만 출력하시오.
+select employee_id, last_name || first_name name, department_id, hire_date, trunc((sysdate - hire_date) / 365) "근무년수"
+from HR.employees
+order by "근무년수" desc;
+
+
+--문제) 근속년수 15년 이상인 사원들만 출력하시오.
+select employee_id, last_name, department_id, hire_date, trunc((sysdate - hire_date) / 365) "yeyeye"
+from HR.employees
+where trunc((sysdate - hire_date) / 365) >= 15;
