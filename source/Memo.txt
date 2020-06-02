@@ -1,0 +1,39 @@
+- 연결
+conn /as sysdba
+
+1. 포트 확인
+select dbms_xdb.gethttpport() from dual;
+
+2. 포트 변경
+exec dbms_xdb.sethttpport(9000);
+
+3. 유저 생성
+create user {user.name} identified by {user.password};
+
+4. 권한부여
+grant connect, resource, dba to {user.name};
+
+------------ 방화벽 ------------
+1. 제어판
+2. Windows 방화벽
+3. 고급 설정
+4. 인바운드 규칙
+5. 새 규칙
+6. 포트 > 다음
+7. 포트설정 > 다음
+
+
+
+
+
+
+
+
+
+
+------------ 2020.06.01------------
+select * from HR.employees;
+
+
+
+
