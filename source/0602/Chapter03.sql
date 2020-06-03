@@ -102,3 +102,157 @@ where job_id = 'SA_REP';
 select sysdate
 from dual;
 
+-- 입사일이 2007년 01월 01일보다 이전인 직원들을 출력하시오.
+select *
+from HR.employees
+where hire_date < '07/01/01';
+
+-- to_date()
+select *
+from HR.employees
+where hire_date < to_date('01/01/07', 'DD/MM/YY');
+
+-- 사원번호, 직무, 입사일을 출력하는데 사원들이 입사일로 부터 몇 주가 되었는지 같이 출력하시오.
+select employee_id, job_id, hire_date, (sysdate - hire_date) / 7
+from HR.employees;
+
+-- 입사한지 몇 달이 되었는지 출력하시오. - months_between
+select employee_id, job_id, hire_date, months_between(sysdate, hire_date)
+from HR.employees;
+
+-- 입사이후 6개월이 된 날짜는 언제입니까?
+-- 사원번호, 직무, 입사일
+select employee_id, job_id, hire_date, add_months(hire_date, 6)
+from HR.employees;
+
+select hire_date, sysdate - 14
+from HR.employees;
+
+-- 오늘 날짜에서 14일 전에 입사한 직원은?
+select *
+from HR.employees
+where hire_date = sysdate - 14;
+
+-- 입사일로부터 다음 금요일은 몇일 입니까?
+select employee_id, job_id, hire_date, next_day(hire_date, '금요일') 
+from HR.employees;
+
+-- 달의 마지막날을 출력
+-- 입사한 달의 마지막 날은 언제입니까?
+select employee_id, job_id, hire_date, last_day(hire_date)
+from HR.employees;
+
+-- 입사일로 부터 36개월이 지난 사원들을 출력하시오.
+select *
+from HR.employees
+where months_between(sysdate, hire_date) > 36; -- 월
+
+select *
+from HR.employees
+where sysdate - hire_date > 36; -- 일
+
+-- 입사일로 부터 며칠이 지났는지 구하시고.
+select trunc(sysdate - hire_date)
+from HR.employees;
+
+-- 사원번호, 직무, 입사일을 출력하는데 입사일을 년 4자리로 출력하시오.
+-- 날짜 표기를 yyyy-mm-dd
+-- to_char(data, 'yyyy-mm-dd hh mi ss am') = 날짜를 원하는 형태의 문자로 바꿀때 사용
+select employee_id, job_id, hire_date, to_char(hire_date, 'yyyy-mm-dd hh : mi : ss am')
+from HR.employees;
+
+select sysdate, to_char(sysdate, 'yyyy-mm-dd hh : mi : ss am')
+from dual;
+
+-- 사원번호 직무 급여를 출력하는데 급여 앞에 $를 붙이고 세자리마다 , 를 찍어서 출력하시오.
+select employee_id, job_id, salary, to_char(salary, '$999,999'), to_char(salary, 'L999,999'), to_char(salary, 'L999,999mi')
+from HR.employees;
+
+-- 날짜가 10-10-2002 이후에 입사한 직원을 출력하시오.
+select *
+from HR.employees
+where to_char(hire_date, 'dd-mm-yyyy') > '10-10-2002';
+
+select *
+from HR.employees
+where hire_date > to_date('10-10-2002', 'dd-mm-yyyy');
+
+
+-- 일반 함수 : NVL(Null Value), NVL2, NULLIF
+select *
+from HR.employees;
+-- 사원번호, 직무, 커미션을, 포함한 급여를 출력하시오.
+select employee_id, job_id, salary + salary * nvl(commission_pct, 0)
+from HR.employees;
+
+-- 사원번호, 직무, 연봉을 구하시오
+select employee_id, job_id, salary * (1 + nvl(commission_pct, 0)) * 12
+from HR.employees;
+
+select employee_id, job_id, nvl2(commission_pct, salary + salary * commission_pct, salary)
+from HR.employees;
+
+--select nvl2(null, 'not null', 'null')
+--from dual;
+
+-- 많이 사용하는 방법
+select employee_id, job_id, nvl2(commission_pct, 'sal+comm', 'sal')
+from HR.employees;
+
+-- 조건 표현식
+-- 직무가 'IT_PROG' 일 때 급여에 1.1배를 하고
+-- 직무가 'ST_CLERK' 일 때 급여에 1.15배를 하고
+-- 직무가 'SA_REP' 일 때 급여에 1.2배를 한다.
+-- 나머지 직원은 급여만 지급한다.
+-- 사원번호, 급여, 직무, 조건에 따른 값
+select employee_id, salary, job_id,
+    case job_id when 'IT_PROG' then 1.10 * salary
+                when 'ST_CLERK' then 1.15 * salary
+                when 'SA_REP' then 1.20 * salary
+    else salary end sal, hire_date
+from HR.employees;
+
+select employee_id, salary, job_id,
+    decode( job_id  , 'IT_PROG', 1.10 * salary
+                    , 'ST_CLERK', 1.15 * salary
+                    , 'SA_REP', 1.20 * salary
+    , salary ) sal, hire_date
+from HR.employees;
+
+-- 급여가 10000이상이면 "이사"
+--          7000이상 "부장"
+--          5000이상 "과장"
+--          나머지는 "사원"
+--      성과 급여를 같이 출력한다.
+select last_name, salary, job_id,
+    case when salary >= 10000 then '이사'
+        when salary >= 7000 then '부장'
+        when salary >= 5000 then '과장'
+    else '사원' end "직급"
+from HR.employees;
+
+-- 문제) 급여를 2000으로 나눈 값의 몫이
+--        0이면 0.00
+--        1이면 0.09
+--        2이면 0.20
+--        3이면 0.30
+--        4이면 0.40
+--        5이면 0.42
+--        6이면 0.44
+--              0.45 만큼 세금이 부여된다.
+-- 부여되는 세금을 출력하시오.
+-- 성과 급여도 같이 출력하시오. (단, 부서가 80인 사원만)
+-- decode 를 사용하시오.
+select last_name, salary, trunc(salary / 2000) "나눈 값",
+    decode (
+        trunc(salary / 2000),0 , salary * 0.00
+                            ,1 , salary * 0.09
+                            ,2 , salary * 0.20
+                            ,3 , salary * 0.30
+                            ,4 , salary * 0.40
+                            ,5 , salary * 0.42
+                            ,6 , salary * 0.44
+                                , salary * 0.45
+    ) "세금", department_id
+from HR.employees
+where department_id = 80;

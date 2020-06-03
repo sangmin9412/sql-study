@@ -256,3 +256,40 @@ select last_name, salary, trunc(salary / 2000) "나눈 값",
     ) "세금", department_id
 from HR.employees
 where department_id = 80;
+
+----------------------------------------------------------------------
+
+-- lpad
+-- 사원번호, 직무, 급여를 출력하는 급여는 10자리로 출력하고 남은 자리는 '*'로 앞쪽에 출력하시오.
+select employee_id, job_id, lpad(salary, 10, '*')
+from HR.employees;
+
+-- rpad
+-- 사원번호, 직무, 급여를 출력하는 급여는 10자리로 출력하고 남은 자리는 '*'로 뒤쪽에 출력하시오.
+select employee_id, job_id, rpad(salary, 10, '*')
+from HR.employees;
+
+-- 문제) 사원번호, 이름, 이메일, 직무를 출력하는데 이메일은 이메일중 세글자만 출력하고 나머지글자는 *로 출력하시오
+select employee_id, last_name, rpad(substr(email, 1, 3), length(email), '*'), job_id
+from HR.employees;
+
+-- replace(, , ,)
+select replace('JACK and JUE', 'J', 'BL')
+from dual;
+
+select email, replace(email, 'NK',  'BL')
+from HR.employees
+where email like '%NK%';
+
+-- 자바 replace
+--String str = '이숭무는 천재입니다 \n';
+--str.replace('\n', '<br />')
+
+select trim('A' from 'AbAbAbAbAbAbA'), trim(' baba babab ')
+from dual;
+
+-- 자바 trim
+--String trimStr = ' abd cbd ';
+--System.out.println(trimStr.trim()); -- 'abd cbd'
+
+
