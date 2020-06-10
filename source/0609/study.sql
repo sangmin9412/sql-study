@@ -218,36 +218,38 @@ ADD CONSTRAINT reply_PK PRIMARY KEY(reply_no, ruser_id, comment_no, cuser_id);
 
 -- foreign_key.sql
 ALTER TABLE board
-ADD CONSTRAINT board_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id);
+ADD CONSTRAINT board_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id) ON DELETE CASCADE;
 
 ALTER TABLE goods
-ADD CONSTRAINT goods_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id);
+ADD CONSTRAINT goods_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id) ON DELETE SET NULL;
 
 ALTER TABLE goods_ipgo
-ADD CONSTRAINT goods_ipgo_goods_num_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num);
+ADD CONSTRAINT goods_ipgo_goods_num_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num) ON DELETE CASCADE;
 
 ALTER TABLE cart
-ADD CONSTRAINT cart_goods_seq_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num);
+ADD CONSTRAINT cart_goods_seq_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num) ON DELETE CASCADE;
 
 ALTER TABLE cart
-ADD CONSTRAINT cart_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id);
+ADD CONSTRAINT cart_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id) ON DELETE CASCADE;
 
 ALTER TABLE wish
-ADD CONSTRAINT wish_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id);
+ADD CONSTRAINT wish_user_id_FK FOREIGN KEY(user_id) REFERENCES member(user_id) ON DELETE CASCADE;
 
 ALTER TABLE wish
-ADD CONSTRAINT wish_goods_num_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num);
+ADD CONSTRAINT wish_goods_num_FK FOREIGN KEY(goods_num) REFERENCES goods(goods_num) ON DELETE CASCADE;
 
 ALTER TABLE comment1
-ADD CONSTRAINT comment_user_id_FK FOREIGN KEY(cuser_id) REFERENCES member(user_id);
+ADD CONSTRAINT comment_user_id_FK FOREIGN KEY(cuser_id) REFERENCES member(user_id) ON DELETE CASCADE;
 
 ALTER TABLE reply
-ADD CONSTRAINT reply_ruser_id_FK FOREIGN KEY(ruser_id) REFERENCES member(user_id);
+ADD CONSTRAINT reply_ruser_id_FK FOREIGN KEY(ruser_id) REFERENCES member(user_id) ON DELETE CASCADE;
 
 ALTER TABLE reply
-ADD CONSTRAINT reply_comment1_FK FOREIGN KEY(comment_no, cuser_id) REFERENCES comment1(comment_no, cuser_id);
+ADD CONSTRAINT reply_comment1_FK FOREIGN KEY(comment_no, cuser_id) REFERENCES comment1(comment_no, cuser_id) ON DELETE CASCADE;
 
-
+-- unique_key.sql
+ALTER TABLE member
+ADD CONSTRAINT member_user_email_UK UNIQUE(user_email);
 
 -- check constraint
 ALTER TABLE cart
