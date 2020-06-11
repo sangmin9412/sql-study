@@ -54,9 +54,13 @@ VALUES ((
     FROM comment1
 ), 'test', default, '제목', '내용');
 
+DELETE FROM comment1
+WHERE comment_no = 25;
+
 SELECT
     *
-FROM comment1;
+FROM comment1
+order by comment_no;
 
 -- INDEX
 -- 조건절에 사용하는 컬럼에 INDEX 를 사용한다. ex) primary key
@@ -90,3 +94,5 @@ SELECT
     *
 FROM user_cons_columns
 WHERE table_name = 'EMPLOYEES';
+
+commit;
